@@ -10,7 +10,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 # --- DÁN LINK URI SUPABASE CỦA BẠN VÀO ĐÂY ---
-DATABASE_URL = "postgresql://postgres:[Bao_asd_qwe]@db.afeyunipehwlckquuizg.supabase.co:5432/postgres"
+DATABASE_URL = "postgresql://postgres.afeyunipehwlckquuizg:[Bao_asd_qwe]@aws-1-ap-southeast-1.pooler.supabase.com:6543/postgres"
 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
