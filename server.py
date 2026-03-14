@@ -9,7 +9,7 @@ from sqlalchemy import Column, Integer, String, Boolean, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-# --- DÁN LINK URI SUPABASE CỦA BẠN VÀO ĐÂY ---
+# --- ĐÃ XÓA DẤU NGOẶC VUÔNG Ở MẬT KHẨU ---
 DATABASE_URL = "postgresql://postgres.afeyunipehwlckquuizg:Bao_asd_qwe@aws-1-ap-southeast-1.pooler.supabase.com:6543/postgres"
 
 engine = create_engine(DATABASE_URL)
@@ -49,43 +49,47 @@ def xoa_file_rac(path: str):
 @app.post("/api/tts")
 async def generate_tts(req: TTSRequest, background_tasks: BackgroundTasks):
     db = SessionLocal()
-    user = db.query(User).filter(User.email == req.email).first()
-    if not user: raise HTTPException(status_code=404, detail="User not found")
-    if not user.is_vip and len(req.text) > user.balance:
-        raise HTTPException(status_code=400, detail="Số dư không đủ!")
-
     try:
+        user = db.query(User).filter(User.email == req.email).first()
+        if not user: raise HTTPException(status_code=404, detail="User not found")
+        if not user.is_vip and len(req.text) > user.balance:
+            raise HTTPException(status_code=400, detail="Số dư không đủ!")
+
         file_name = f"audio_{uuid.uuid4().hex}.mp3"
         communicate = edge_tts.Communicate(text=req.text, voice=req.voice, rate=req.rate, pitch=req.pitch)
         await communicate.save(file_name)
+        
         if not user.is_vip:
             user.balance -= len(req.text)
             db.commit()
+            
         background_tasks.add_task(xoa_file_rac, file_name)
         return FileResponse(file_name, media_type="audio/mpeg")
-    except Exception as e: raise HTTPException(status_code=500, detail=str(e))
-    finally: db.close()
+    except Exception as e: 
+        raise HTTPException(status_code=500, detail=str(e))
+    finally: 
+        db.close()
 
 @app.post("/api/register")
 async def register(req: AuthRequest):
     db = SessionLocal()
-    if db.query(User).filter(User.email == req.email).first():
+    try:
+        if db.query(User).filter(User.email == req.email).first():
+            raise HTTPException(status_code=400, detail="Email đã tồn tại!")
+        new_user = User(email=req.email, password=req.password)
+        db.add(new_user)
+        db.commit()
+        return {"message": "Thành công!", "balance": 1000, "is_vip": False}
+    finally:
         db.close()
-        raise HTTPException(status_code=400, detail="Email đã tồn tại!")
-    new_user = User(email=req.email, password=req.password)
-    db.add(new_user)
-    db.commit()
-    res = {"message": "Thành công!", "balance": 1000, "is_vip": False}
-    db.close()
-    return res
 
 @app.post("/api/login")
 async def login(req: AuthRequest):
     db = SessionLocal()
-    user = db.query(User).filter(User.email == req.email).first()
-    if not user or user.password != req.password:
+    try:
+        user = db.query(User).filter(User.email == req.email).first()
+        if not user or user.password != req.password:
+            raise HTTPException(status_code=400, detail="Sai thông tin!")
+        return {"balance": user.balance, "is_vip": user.is_vip}
+    finally:
         db.close()
-        raise HTTPException(status_code=400, detail="Sai thông tin!")
-    res = {"balance": user.balance, "is_vip": user.is_vip}
-    db.close()
-    return res
