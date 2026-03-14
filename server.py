@@ -87,3 +87,9 @@ async def upgrade_vip(req: UpgradeRequest):
         db_users[req.email]["is_vip"] = True
         return {"message": "Đã nâng cấp VIP thành công!"}
     raise HTTPException(status_code=404, detail="Không tìm thấy tài khoản")
+    # Thêm đường dẫn này vào gần chỗ @app.get("/")
+@app.get("/sitemap.xml")
+async def sitemap():
+    with open("sitemap.xml", "r", encoding="utf-8") as f:
+        content = f.read()
+    return HTMLResponse(content=content, media_type="application/xml")
