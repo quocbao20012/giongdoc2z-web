@@ -4,14 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Giọng Đọc 2z - Trí Tuệ Nhân Tạo</title>
-    <meta name="description" content="2z Studio - Công cụ chuyển văn bản thành giọng nói AI tự nhiên, chuyên nghiệp. Hỗ trợ đa ngôn ngữ và lồng tiếng phim.">
-<meta name="keywords" content="text to speech, tts, giọng đọc ai, review phim, 2z studio, giongdoc2z">
-<meta name="author" content="2z Studio">
-<link rel="canonical" href="https://giongdoc2z.io.vn/">
-
-<meta property="og:title" content="Giọng Đọc 2z - AI Studio Đa Ngôn Ngữ">
-<meta property="og:description" content="Tạo giọng nói AI cực hay từ văn bản. Thử ngay miễn phí!">
-<meta property="og:url" content="https://giongdoc2z.io.vn/">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -260,265 +252,55 @@
     </div>
 
     <div id="paymentModal" class="hidden absolute inset-0 bg-slate-900/60 backdrop-blur-sm justify-center items-center z-50">
-        <div class="bg-white rounded-[24px] shadow-2xl w-[400px] overflow-hidden relative fade-in">
-            <div class="bg-gradient-to-r from-amber-400 to-orange-500 pt-10 pb-8 text-center text-white relative">
-                <button onclick="closeModals()" class="absolute top-4 right-4 w-8 h-8 bg-white/20 hover:bg-white/30 text-white rounded-full flex items-center justify-center transition">
+        <div class="bg-white rounded-[32px] shadow-2xl w-[420px] overflow-hidden relative fade-in">
+            <div class="bg-gradient-to-r from-blue-600 to-indigo-700 pt-10 pb-8 text-center text-white relative">
+                <button onclick="closeModals()" class="absolute top-4 right-4 w-8 h-8 bg-white/10 hover:bg-white/20 text-white rounded-full flex items-center justify-center transition">
                     <i class="fa-solid fa-xmark text-sm"></i>
                 </button>
-                <h3 class="text-[26px] font-black uppercase tracking-wide">Gói VIP Trọn Đời</h3>
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-white/20 rounded-2xl mb-4 backdrop-blur-md">
+                    <i class="fa-solid fa-crown text-3xl text-amber-300"></i>
+                </div>
+                <h3 class="text-2xl font-black uppercase tracking-wide">Nâng Cấp VIP</h3>
+                <p class="text-blue-100 text-sm mt-1 opacity-80">Sở hữu giọng đọc không giới hạn</p>
             </div>
             
-            <div class="px-8 pb-8 pt-6 text-center bg-white">
-                <div class="mb-6 flex justify-center items-end">
-                    <span class="text-[40px] leading-none font-black text-slate-800">50.000</span>
-                    <span class="text-sm font-bold text-slate-400 ml-1 mb-1">VNĐ</span>
+            <div class="px-8 pb-8 pt-6 bg-white">
+                <div class="mb-6 text-center">
+                    <div class="bg-slate-50 p-3 rounded-3xl inline-block border-2 border-dashed border-indigo-100 shadow-inner">
+                        <img id="qrPaymentImg" src="https://img.vietqr.io/image/vietinbank-107873799807-compact.jpg?amount=50000&addTag=1&accountName=NGUYEN%20QUOC%20BAO" alt="QR VietinBank" class="w-48 h-48 rounded-xl object-contain">
+                    </div>
+                    <p class="text-[11px] text-slate-400 mt-3 italic font-medium">Quét mã QR để tự động điền thông tin chuyển khoản</p>
+                </div>
+
+                <div class="space-y-3 mb-6">
+                    <div class="flex justify-between items-center bg-slate-50 p-3 rounded-xl border border-slate-100">
+                        <span class="text-xs font-bold text-slate-400 uppercase">Ngân hàng</span>
+                        <span class="text-sm font-black text-indigo-900">VietinBank</span>
+                    </div>
+                    <div class="flex justify-between items-center bg-slate-50 p-3 rounded-xl border border-slate-100">
+                        <span class="text-xs font-bold text-slate-400 uppercase">Số tài khoản</span>
+                        <div class="flex items-center">
+                            <span class="text-sm font-black text-indigo-900 mr-2">107873799807</span>
+                            <i class="fa-regular fa-copy text-indigo-400 cursor-pointer hover:text-indigo-600"></i>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center bg-slate-50 p-3 rounded-xl border border-slate-100">
+                        <span class="text-xs font-bold text-slate-400 uppercase">Chủ tài khoản</span>
+                        <span class="text-sm font-black text-indigo-900">NGUYEN QUOC BAO</span>
+                    </div>
+                    
+                    <div class="bg-amber-50 border border-amber-100 p-4 rounded-2xl relative overflow-hidden">
+                        <div class="absolute top-0 right-0 bg-amber-200 text-amber-700 text-[10px] px-2 py-0.5 font-bold uppercase rounded-bl-lg">Bắt buộc</div>
+                        <p class="text-[10px] font-bold text-amber-600 uppercase mb-1">Nội dung chuyển khoản:</p>
+                        <p id="transferMemo" class="text-base font-black text-slate-800 tracking-wide">2Z STUDIO [EMAIL CỦA BẠN]</p>
+                    </div>
                 </div>
                 
-                <button onclick="processUpgradeVIPReal()" class="w-full bg-[#0f172a] hover:bg-black text-white font-bold py-4 rounded-xl shadow-lg transition transform active:scale-95">
-                    Đã chuyển khoản (Giả lập)
+                <p class="text-[11px] text-slate-400 mb-6 text-center leading-relaxed">Sau khi chuyển khoản thành công, hệ thống sẽ xác nhận và nâng cấp tài khoản của bạn trong vòng 5-10 phút.</p>
+
+                <button onclick="closeModals()" class="w-full bg-[#0f172a] hover:bg-black text-white font-bold py-4 rounded-xl shadow-lg transition transform active:scale-95 flex items-center justify-center">
+                    <i class="fa-solid fa-check-circle mr-2"></i> Tôi đã chuyển khoản xong
                 </button>
             </div>
         </div>
     </div>
-
-    <script>
-        // --- 1. XỬ LÝ ĐÓNG MỞ CÁC MENU ---
-        function toggleDropdown(id) {
-            document.querySelectorAll('.custom-dropdown').forEach(el => { if (el.id !== id) el.classList.add('hidden'); });
-            document.getElementById(id).classList.toggle('hidden');
-        }
-        document.addEventListener('click', function(event) {
-            if (!event.target.closest('.dropdown-container')) {
-                document.querySelectorAll('.custom-dropdown').forEach(el => el.classList.add('hidden'));
-            }
-        });
-
-        // --- 2. LOGIC TÀI KHOẢN VÀ DỮ LIỆU ---
-        let currentUserEmail = localStorage.getItem('userEmail') || null;
-        let charBalance = parseInt(localStorage.getItem('userBalance')) || 0;
-        let isVIP = localStorage.getItem('userVIP') === 'true';
-        let isLoggedIn = !!currentUserEmail;
-        let isRegisterMode = true; 
-
-        updateUI(); 
-
-        function updateUI() {
-            if (isLoggedIn) {
-                document.getElementById('btnLoginMenu').classList.add('hidden');
-                document.getElementById('userInfo').classList.remove('hidden'); document.getElementById('userInfo').classList.add('flex');
-                document.getElementById('userNameDisplay').innerText = currentUserEmail.split('@')[0];
-                document.getElementById('textInput').placeholder = "Hãy nhập hoặc dán nội dung văn bản vào đây...";
-
-                if (isVIP) {
-                    document.getElementById('balanceDisplay').innerHTML = '<span class="text-amber-500 font-bold ml-1"><i class="fa-solid fa-infinity"></i> Không giới hạn</span>';
-                    document.getElementById('userPlanDisplay').innerHTML = '<span class="text-amber-600 font-bold">VIP Member</span>';
-                } else { 
-                    document.getElementById('balanceDisplay').innerHTML = `<span class="text-indigo-600 font-bold ml-1">${charBalance.toLocaleString('vi-VN')}</span>`; 
-                    document.getElementById('userPlanDisplay').innerHTML = 'Bản Miễn Phí';
-                }
-            } else {
-                document.getElementById('btnLoginMenu').classList.remove('hidden');
-                document.getElementById('userInfo').classList.add('hidden'); document.getElementById('userInfo').classList.remove('flex');
-                document.getElementById('balanceDisplay').innerHTML = 'Chưa đăng nhập';
-                document.getElementById('textInput').placeholder = "Vui lòng đăng nhập để sử dụng AI Studio.";
-            }
-        }
-
-        function logout() {
-            if(confirm("Bạn có chắc chắn muốn đăng xuất không?")) {
-                localStorage.clear(); isLoggedIn = false; currentUserEmail = null; charBalance = 0; isVIP = false;
-                updateUI(); switchTab('studio');
-            }
-        }
-
-        function openLogin() { document.getElementById('loginModal').classList.remove('hidden'); document.getElementById('loginModal').classList.add('flex'); }
-        function openPayment() { document.getElementById('paymentModal').classList.remove('hidden'); document.getElementById('paymentModal').classList.add('flex'); }
-        function closeModals() { document.getElementById('loginModal').classList.add('hidden'); document.getElementById('paymentModal').classList.add('hidden'); document.getElementById('pauseSettingsModal').classList.add('hidden'); }
-
-        function toggleAuthMode() {
-            isRegisterMode = !isRegisterMode;
-            if(isRegisterMode) {
-                document.getElementById('authTitle').innerText = "Tạo tài khoản mới"; document.getElementById('authSubtitle').innerText = "Đăng ký nhanh gọn, nhận ngay quà tặng";
-                document.getElementById('authSubmitBtn').innerText = "Đăng ký & Nhận quà"; document.getElementById('authToggleText').innerText = "Đã có tài khoản?"; document.getElementById('authToggleBtn').innerText = "Đăng nhập ngay";
-            } else {
-                document.getElementById('authTitle').innerText = "Chào mừng trở lại"; document.getElementById('authSubtitle').innerText = "Đăng nhập để tiếp tục làm việc";
-                document.getElementById('authSubmitBtn').innerText = "Đăng nhập"; document.getElementById('authToggleText').innerText = "Chưa có tài khoản?"; document.getElementById('authToggleBtn').innerText = "Đăng ký ngay";
-            }
-        }
-
-        async function processAuthReal() {
-            const email = document.getElementById('emailInput').value.trim(); const pass = document.getElementById('passInput').value.trim();
-            if(!email || !pass) { alert("Vui lòng nhập Email và Mật khẩu!"); return; }
-            const endpoint = isRegisterMode ? '/api/register' : '/api/login';
-            document.getElementById('authSubmitBtn').innerText = "Đang xử lý...";
-
-            try {
-                // CHÚ Ý CHỖ NÀY ĐÃ ĐƯỢC SỬA BỎ LOCALHOST
-                const res = await fetch(`${endpoint}`, {
-                    method: 'POST', headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({email: email, password: pass})
-                });
-                const data = await res.json();
-                if(res.ok) {
-                    isLoggedIn = true; currentUserEmail = email; charBalance = data.balance; isVIP = data.is_vip;
-                    localStorage.setItem('userEmail', email); localStorage.setItem('userBalance', charBalance); localStorage.setItem('userVIP', isVIP);
-                    updateUI(); closeModals(); alert(data.message);
-                } else { alert(data.detail); }
-            } catch(e) { alert("Lỗi kết nối máy chủ! (Nhớ bật server Python lên nhé)"); }
-            finally { document.getElementById('authSubmitBtn').innerText = isRegisterMode ? "Đăng ký & Nhận quà" : "Đăng nhập"; }
-        }
-
-        function processUpgradeVIPReal() {
-            if (!isLoggedIn) { alert("Vui lòng đăng nhập trước khi nâng cấp!"); closeModals(); openLogin(); return; }
-            isVIP = true;
-            localStorage.setItem('userVIP', 'true');
-            updateUI(); 
-            closeModals(); 
-            alert(`Cảm ơn bạn! Tài khoản đã được nâng cấp VIP Vĩnh Viễn.`);
-        }
-
-        function setSpeed(rateValue, labelText) {
-            document.getElementById('speedBtn').setAttribute('data-rate', rateValue);
-            document.getElementById('speedLabel').innerText = labelText.split(' ')[0] + ' Tốc độ';
-            toggleDropdown('speedMenu');
-        }
-
-        function insertPause(timeStr) {
-            const textarea = document.getElementById('textInput');
-            const cursorPosition = textarea.selectionStart;
-            const textBefore = textarea.value.substring(0, cursorPosition);
-            const textAfter = textarea.value.substring(cursorPosition, textarea.value.length);
-            textarea.value = textBefore + `[Nghỉ ${timeStr}]` + textAfter; 
-            document.getElementById('charCount').innerText = textarea.value.length;
-            toggleDropdown('pauseMenu');
-            textarea.focus();
-        }
-
-        function switchTab(tab) {
-            if(tab === 'studio') {
-                document.getElementById('studioTab').classList.remove('hidden');
-                document.getElementById('historyTab').classList.add('hidden');
-                document.getElementById('navStudio').className = "flex items-center px-4 py-3 bg-indigo-50 text-indigo-700 rounded-xl font-semibold transition-all";
-                document.getElementById('navHistory').className = "flex items-center px-4 py-3 text-slate-500 hover:bg-slate-50 hover:text-slate-800 rounded-xl font-medium transition-all";
-            } else {
-                if(!isLoggedIn) { alert("Bạn cần đăng nhập để xem lịch sử!"); return; }
-                document.getElementById('studioTab').classList.add('hidden');
-                document.getElementById('historyTab').classList.remove('hidden');
-                document.getElementById('navHistory').className = "flex items-center px-4 py-3 bg-indigo-50 text-indigo-700 rounded-xl font-semibold transition-all";
-                document.getElementById('navStudio').className = "flex items-center px-4 py-3 text-slate-500 hover:bg-slate-50 hover:text-slate-800 rounded-xl font-medium transition-all";
-                hienThiLichSu(); 
-            }
-        }
-
-        function luuVaoLichSu(noiDung, audioBase64) {
-            let userKey = 'lichSu_' + currentUserEmail;
-            let lichSu = JSON.parse(localStorage.getItem(userKey)) || [];
-            lichSu.unshift({ thoiGian: new Date().toLocaleString('vi-VN'), vanBan: noiDung, file: audioBase64 });
-            if(lichSu.length > 10) lichSu.pop();
-            try { localStorage.setItem(userKey, JSON.stringify(lichSu)); } catch(e) { lichSu.pop(); localStorage.setItem(userKey, JSON.stringify(lichSu)); }
-        }
-
-        function hienThiLichSu() {
-            let khungLichSu = document.getElementById("danh_sach_lich_su");
-            let userKey = 'lichSu_' + currentUserEmail;
-            let lichSu = JSON.parse(localStorage.getItem(userKey)) || [];
-            
-            if (lichSu.length === 0) {
-                khungLichSu.innerHTML = `<div class="text-center text-slate-400 py-16"><i class="fa-solid fa-box-open text-5xl mb-4 opacity-50"></i><p class="font-medium">Bạn chưa tạo đoạn âm thanh nào.</p></div>`;
-                return;
-            }
-
-            khungLichSu.innerHTML = "";
-            lichSu.forEach(function(item) {
-                khungLichSu.innerHTML += `
-                    <div class="bg-white border border-slate-200 p-5 rounded-xl shadow-sm hover:border-indigo-300 hover:shadow-md transition">
-                        <div class="flex justify-between items-start mb-3">
-                            <small class="text-xs font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded-md"><i class="fa-regular fa-clock mr-1"></i> ${item.thoiGian}</small>
-                        </div>
-                        <p class="text-sm text-slate-700 font-medium mb-4 line-clamp-3 bg-slate-50 p-3 rounded-lg italic">"${item.vanBan}"</p>
-                        <div class="flex items-center gap-3">
-                            <audio controls class="h-10 w-full custom-audio"><source src="${item.file}" type="audio/mpeg"></audio>
-                            <a href="${item.file}" download="audio_2z_history.mp3" class="shrink-0 text-indigo-600 bg-indigo-50 hover:bg-indigo-600 hover:text-white px-4 py-2 rounded-xl text-sm font-bold transition border border-indigo-100"><i class="fa-solid fa-download"></i> Tải MP3</a>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        function xoaToanBoLichSu() {
-            if(confirm("Xóa lịch sử không thể khôi phục. Bạn có chắc chắn?")) {
-                let userKey = 'lichSu_' + currentUserEmail;
-                localStorage.removeItem(userKey);
-                hienThiLichSu();
-            }
-        }
-
-        const btnGenerate = document.getElementById('btnGenerate');
-        const textInput = document.getElementById('textInput');
-        textInput.addEventListener('input', () => { document.getElementById('charCount').innerText = textInput.value.length; document.getElementById('resultContainer').classList.add('hidden'); });
-
-        btnGenerate.addEventListener('click', async () => {
-            if (!isLoggedIn) { openLogin(); return; }
-            const rawText = textInput.value.trim();
-            if (!rawText) { alert("Vui lòng nhập văn bản!"); return; }
-            
-            const textLength = rawText.length;
-            if (!isVIP && textLength > charBalance) { openPayment(); return; } 
-
-            let processedText = rawText
-                .replace(/\[Nghỉ 0\.5s\]/g, " ... ")
-                .replace(/\[Nghỉ 1s\]/g, " ...... ")
-                .replace(/\[Nghỉ 2s\]/g, " ......... ");
-
-            const selectedRate = document.getElementById('speedBtn').getAttribute('data-rate');
-            const voiceSelect = document.getElementById('voiceSelect');
-            const selectedOption = voiceSelect.options[voiceSelect.selectedIndex];
-            const voiceName = selectedOption.value;
-            const pitchValue = selectedOption.getAttribute('data-pitch');
-
-            btnGenerate.disabled = true;
-            document.getElementById('loadingContainer').classList.remove('hidden'); document.getElementById('resultContainer').classList.add('hidden');
-
-            let currentProgress = 0;
-            const progressInterval = setInterval(() => {
-                if (currentProgress < 90) { 
-                    currentProgress += 2; document.getElementById('progressBar').style.width = currentProgress + '%'; document.getElementById('progressText').innerText = currentProgress + '%'; 
-                }
-            }, 50);
-
-            try {
-                // CHÚ Ý CHỖ NÀY CŨNG ĐÃ ĐƯỢC SỬA BỎ LOCALHOST
-                const response = await fetch('/api/tts', {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ text: processedText, voice: voiceName, rate: selectedRate, pitch: pitchValue, email: currentUserEmail })
-                });
-
-                if (response.ok) {
-                    const blob = await response.blob(); 
-                    const audioUrl = URL.createObjectURL(blob);
-                    
-                    const reader = new FileReader();
-                    reader.readAsDataURL(blob);
-                    reader.onloadend = function() { luuVaoLichSu(rawText, reader.result); }
-
-                    clearInterval(progressInterval); document.getElementById('progressBar').style.width = '100%'; document.getElementById('progressText').innerText = '100%';
-                    
-                    setTimeout(() => {
-                        document.getElementById('loadingContainer').classList.add('hidden');
-                        document.getElementById('audioPlayer').src = audioUrl; document.getElementById('btnDownload').href = audioUrl;
-                        document.getElementById('resultContainer').classList.remove('hidden'); document.getElementById('resultContainer').classList.add('flex');
-                        document.getElementById('audioPlayer').play();
-                        
-                        if (!isVIP) { 
-                            charBalance -= textLength; 
-                            localStorage.setItem('userBalance', charBalance); 
-                            updateUI(); 
-                        }
-                    }, 500);
-                } else { const errorData = await response.json(); alert(errorData.detail || "Lỗi máy chủ!"); clearInterval(progressInterval); document.getElementById('loadingContainer').classList.add('hidden'); }
-            } catch (error) { alert("Lỗi kết nối máy chủ! Hãy chắc chắn server.py đang chạy."); clearInterval(progressInterval); document.getElementById('loadingContainer').classList.add('hidden'); }
-            finally { btnGenerate.disabled = false; }
-        });
-    </script>
-</body>
-</html>
