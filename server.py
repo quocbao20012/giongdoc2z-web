@@ -44,6 +44,11 @@ db_users = {}
 def xoa_file_rac(path: str):
     if os.path.exists(path):
         os.remove(path)
+from fastapi.responses import FileResponse # Đảm bảo đã có dòng này ở đầu file
+
+@app.get("/sitemap.xml")
+async def get_sitemap():
+    return FileResponse("sitemap.xml")
 
 @app.post("/api/tts")
 async def generate_tts(req: TTSRequest, background_tasks: BackgroundTasks):
@@ -87,9 +92,3 @@ async def upgrade_vip(req: UpgradeRequest):
         db_users[req.email]["is_vip"] = True
         return {"message": "Đã nâng cấp VIP thành công!"}
     raise HTTPException(status_code=404, detail="Không tìm thấy tài khoản")
-    # Thêm đường dẫn này vào gần chỗ @app.get("/")
-@app.get("/sitemap.xml")
-async def sitemap():
-    with open("sitemap.xml", "r", encoding="utf-8") as f:
-        content = f.read()
-    return HTMLResponse(content=content, media_type="application/xml")
