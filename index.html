@@ -341,7 +341,7 @@ async function refreshData() {
             try {
                 const res = await fetch(endpoint, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({email, password: pass}) });
                 const data = await res.json();
-                if(res.ok) {
+                if(res.ok) 
                     localStorage.setItem('userEmail', email); localStorage.setItem('userBalance', data.balance); localStorage.setItem('userVIP', data.is_vip);
                     location.reload();
                 } else { alert(data.detail); }
