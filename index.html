@@ -278,14 +278,17 @@ async function refreshData() {
     }
 }
         function updateUI() {
-            if (userEmail) {
-                document.getElementById('btnLoginMenu').classList.add('hidden');
-                document.getElementById('userInfo').classList.replace('hidden', 'flex');
-                document.getElementById('userNameDisplay').innerText = userEmail.split('@')[0];
-                document.getElementById('balanceDisplay').innerText = isVIP ? '∞' : charBalance.toLocaleString();
-                document.getElementById('transferMemo').innerText = `2Z STUDIO ${userEmail.toUpperCase()}`;
-            }
-        }
+    if (userEmail) {
+        document.getElementById('btnLoginMenu').classList.add('hidden');
+        document.getElementById('userInfo').classList.replace('hidden', 'flex');
+        document.getElementById('userNameDisplay').innerText = userEmail.split('@')[0];
+        
+        // Dòng này cực kỳ quan trọng để hiện dấu vô hạn
+        document.getElementById('balanceDisplay').innerText = isVIP ? '∞' : charBalance.toLocaleString();
+        
+        document.getElementById('transferMemo').innerText = `2Z STUDIO ${userEmail.toUpperCase()}`;
+    }
+}
         updateUI();
 
         function switchTab(tab) {
