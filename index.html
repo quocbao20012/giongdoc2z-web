@@ -148,6 +148,7 @@
                             Thêm khoảng nghỉ <i class="fa-solid fa-plus ml-2"></i>
                         </button>
                         <div id="pauseMenu" class="custom-dropdown absolute hidden bg-white border premium-shadow rounded-xl mt-2 w-32 z-50 py-2 text-sm text-center fade-in">
+                            <a href="#" onclick="insertComma(); return false;" class="block py-2 hover:bg-slate-50 font-bold border-b border-slate-50 text-indigo-600 italic text-[11px]">Dấu phẩy (nghỉ ngắn)</a>
                             <a href="#" onclick="insertPause('0.5s'); return false;" class="block py-2 hover:bg-slate-50 font-bold">0.5s</a>
                             <a href="#" onclick="insertPause('1s'); return false;" class="block py-2 hover:bg-slate-50 font-bold">1s</a>
                             <a href="#" onclick="insertPause('2s'); return false;" class="block py-2 hover:bg-slate-50 font-bold">2s</a>
@@ -364,9 +365,10 @@
             const timer = setInterval(() => { if(p < 95) { p += 5; progress.style.width = p + '%'; progressT.innerText = p + '%'; } }, 200);
 
             // Xử lý ngắt nghỉ
-            let processed = rawText.replace(/\./g, " . ".repeat(Math.round(pTimes.dot * 4)))
-                                   .replace(/,/g, " , ".repeat(Math.round(pTimes.comma * 4)))
-                                   .replace(/\n/g, " . ".repeat(Math.round(pTimes.newline * 4)));
+           let processed = rawText
+        .replace(/\./g, " . ".repeat(Math.round(pTimes.dot * 4)))      // Nghỉ dấu chấm
+        .replace(/,/g, " , ".repeat(Math.round(pTimes.comma * 4)))    // THÊM DÒNG NÀY VÀO ĐÂY
+        .replace(/\n/g, " . ".repeat(Math.round(pTimes.newline * 4))); // Nghỉ xuống dòng
 
             const voice = document.getElementById('voiceSelect');
             const res = await fetch('/api/tts', {
