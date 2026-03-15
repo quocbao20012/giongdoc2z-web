@@ -442,14 +442,21 @@
             list.innerHTML = history.map(i => `<div class="bg-white p-4 rounded-2xl border flex flex-col gap-2 shadow-sm"><span class="text-[10px] font-bold text-slate-400 uppercase">${i.date}</span><p class="text-sm italic">"${i.text}"</p><audio src="${i.url}" controls class="w-full h-8"></audio></div>`).join('');
         }
         function xoaLichSu() { localStorage.removeItem('h_2z_' + userEmail); hienThiLichSu(); }
-        function openLogin() { document.getElementById('loginModal').classList.remove('hidden'); }
-        function openPayment() { if(!userEmail) return openLogin(); document.getElementById('paymentModal').classList.remove('hidden'); }
-        function closeModals() { 
-            document.querySelectorAll('#loginModal, #paymentModal, #pauseSettingsModal').forEach(m => {
-                m.classList.add('hidden');
-                m.classList.remove('flex');
-            }); 
-        }
+      function openLogin() { 
+    document.getElementById('loginModal').classList.remove('hidden'); 
+    document.getElementById('loginModal').classList.add('flex'); 
+}
+function openPayment() { 
+    if(!userEmail) return openLogin(); 
+    document.getElementById('paymentModal').classList.remove('hidden'); 
+    document.getElementById('paymentModal').classList.add('flex'); 
+}
+function closeModals() { 
+    document.querySelectorAll('#loginModal, #paymentModal, #pauseSettingsModal').forEach(m => {
+        m.classList.add('hidden');
+        m.classList.remove('flex');
+    }); 
+}
         function toggleAuthMode() { isRegisterMode = !isRegisterMode; document.getElementById('authTitle').innerText = isRegisterMode ? "Tạo tài khoản" : "Đăng nhập"; }
         function setSpeed(r, l) { document.getElementById('speedBtn').setAttribute('data-rate', r); document.getElementById('speedLabel').innerText = l; toggleDropdown('speedMenu'); }
         function logout() { localStorage.clear(); location.reload(); }
