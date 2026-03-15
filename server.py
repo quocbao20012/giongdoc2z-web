@@ -1,6 +1,7 @@
 import os
 import uuid
 import time
+import subprocess # THÊM THƯ VIỆN NÀY ĐỂ XỬ LÝ TỐC ĐỘ BẰNG FFMPEG
 # Thêm Request vào đây để lấy IP chống spam
 from fastapi import FastAPI, HTTPException, BackgroundTasks, Request
 from fastapi.responses import FileResponse, HTMLResponse
@@ -12,12 +13,10 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 # --- CẤU HÌNH HỆ THỐNG ---
-# Khuyên dùng: os.getenv("DATABASE_URL") nếu bạn đã cài Env Var trên Render
 DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres.afeyunipehwlckquuizg:Bao_asd_qwe@aws-1-ap-southeast-1.pooler.supabase.com:6543/postgres")
 
 MAX_CONCURRENT_JOBS = 50
 active_jobs = 0
-# Khởi tạo bộ nhớ tạm để chặn spam IP
 last_request_time = {}
 
 engine = create_engine(DATABASE_URL, pool_size=20, max_overflow=30)
@@ -44,11 +43,29 @@ class TTSRequest(BaseModel):
 class AuthRequest(BaseModel):
     email: str; password: str
 
-# --- UTILS ---
+# --- UTILS XỬ LÝ TỐC ĐỘ (FFMPEG) ---
+def parse_rate_to_atempo(rate_str: str) -> float:
+    """Chuyển đổi chuỗi +100% thành hệ số 2.0 cho FFmpeg"""
+    try:
+        val = float(rate_str.replace('%', '').replace('+', ''))
+        return 1.0 + (val / 100.0)
+    except:
+        return 1.0
+
+def get_atempo_filter(speed: float) -> str:
+    """Tạo bộ lọc atempo cho FFmpeg (Hỗ trợ cả tốc độ siêu nhanh/chậm)"""
+    if speed < 0.5: speed = 0.5
+    filters = []
+    while speed > 2.0:
+        filters.append("atempo=2.0")
+        speed /= 2.0
+    filters.append(f"atempo={speed}")
+    return ",".join(filters)
+
 def xoa_file_rac(path: str):
     """Xóa file sau khi khách đã tải xong để tiết kiệm bộ nhớ"""
     try:
-        time.sleep(10) # Tăng lên 10s cho chắc chắn
+        time.sleep(10)
         if os.path.exists(path):
             os.remove(path)
             print(f"✅ Đã dọn dẹp: {path}")
@@ -81,7 +98,6 @@ async def generate_tts(req: TTSRequest, request: Request, background_tasks: Back
         user_ip = request.client.host
         now = time.time()
         
-        # Cấu hình giới hạn
         if user.is_vip:
             limit_time = 1      # VIP: 1 giây/lần
             max_chars = 100000  # VIP: 100k ký tự
@@ -91,22 +107,37 @@ async def generate_tts(req: TTSRequest, request: Request, background_tasks: Back
             if len(req.text) > user.balance:
                 raise HTTPException(status_code=400, detail="Số dư không đủ, vui lòng nạp thêm!")
 
-        # Chặn Spam nhấn nút
         if user_ip in last_request_time:
             if now - last_request_time[user_ip] < limit_time:
                 raise HTTPException(status_code=429, detail=f"Vui lòng đợi {int(limit_time - (now - last_request_time[user_ip]))}s")
 
-        # Chặn văn bản quá dài (Bảo vệ RAM 512MB)
         if len(req.text) > max_chars:
             raise HTTPException(status_code=400, detail=f"Văn bản quá dài! VIP tối đa {max_chars} ký tự.")
 
         # 3. XỬ LÝ CHÍNH
         active_jobs += 1
-        last_request_time[user_ip] = now # Ghi lại thời điểm tạo
+        last_request_time[user_ip] = now
         
         file_name = f"audio_{uuid.uuid4().hex}.mp3"
-        communicate = edge_tts.Communicate(text=req.text, voice=req.voice, rate=req.rate, pitch=req.pitch)
-        await communicate.save(file_name)
+        temp_file = f"temp_{file_name}"
+        
+        speed_multiplier = parse_rate_to_atempo(req.rate)
+
+        if speed_multiplier == 1.0:
+            # Nếu tốc độ bình thường (1x), dùng thẳng Edge-TTS
+            communicate = edge_tts.Communicate(text=req.text, voice=req.voice, rate="+0%", pitch=req.pitch)
+            await communicate.save(file_name)
+        else:
+            # Nếu tốc độ khác 1x, dùng FFmpeg ép tốc độ để đảm bảo chính xác 100%
+            communicate = edge_tts.Communicate(text=req.text, voice=req.voice, rate="+0%", pitch=req.pitch)
+            await communicate.save(temp_file)
+            
+            filter_str = get_atempo_filter(speed_multiplier)
+            subprocess.run(["ffmpeg", "-y", "-i", temp_file, "-filter:a", filter_str, "-vn", file_name], 
+                           stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            
+            if os.path.exists(temp_file):
+                os.remove(temp_file)
 
         # Trừ tiền nếu không phải VIP
         if not user.is_vip:
@@ -122,7 +153,7 @@ async def generate_tts(req: TTSRequest, request: Request, background_tasks: Back
         raise he
     except Exception as e:
         print(f"🔥 Lỗi nghiêm trọng: {e}")
-        raise HTTPException(status_code=500, detail="Lỗi xử lý AI, thử lại sau!")
+        raise HTTPException(status_code=500, detail=str(e)) # In ra lỗi thật để dễ sửa chữa
     finally:
         active_jobs -= 1
         db.close()
