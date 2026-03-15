@@ -15,7 +15,7 @@ from sqlalchemy.orm import sessionmaker
 DATABASE_URL = "postgresql://postgres.afeyunipehwlckquuizg:Bao_asd_qwe@aws-1-ap-southeast-1.pooler.supabase.com:6543/postgres"
 
 # Giới hạn số người tạo cùng lúc (Gói Free nên để 3-5)
-MAX_CONCURRENT_JOBS = 5
+MAX_CONCURRENT_JOBS = 50
 active_jobs = 0
 
 engine = create_engine(DATABASE_URL, pool_size=10, max_overflow=20)
