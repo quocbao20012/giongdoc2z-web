@@ -1,3 +1,5 @@
+# --- CẤU HÌNH HỆ THỐNG ---
+MAINTENANCE_MODE = False  # Đổi thành True để bật chế độ bảo trì khẩn cấp
 import os
 import uuid
 from fastapi import FastAPI, HTTPException, BackgroundTasks
@@ -30,6 +32,9 @@ app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], all
 
 @app.get("/")
 async def trang_chu():
+    if MAINTENANCE_MODE:
+        with open("maintenance.html", "r", encoding="utf-8") as f:
+            return HTMLResponse(content=f.read())
     with open("index.html", "r", encoding="utf-8") as f:
         return HTMLResponse(content=f.read())
 
