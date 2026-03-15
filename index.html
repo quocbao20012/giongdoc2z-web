@@ -19,12 +19,13 @@
         .text-gradient { background: linear-gradient(135deg, #4f46e5 0%, #9333ea 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .fade-in { animation: fadeIn 0.2s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .progress-transition { transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
     </style>
 </head>
 <body class="flex h-screen overflow-hidden text-slate-800">
 
     <div class="w-64 bg-white border-r border-slate-100 flex flex-col z-20 shadow-sm">
-        <div class="h-20 flex items-center px-6 border-b border-slate-50">
+        <div class="h-20 flex items-center px-6 border-b border-slate-50 relative">
             <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-200 mr-3">
                 <i class="fa-solid fa-staff-snake text-white text-lg"></i> 
             </div>
@@ -38,7 +39,9 @@
                     <div class="text-sm font-bold truncate" id="userNameDisplay">User</div>
                     <div class="text-[11px] font-semibold text-slate-500 mt-0.5" id="userPlanDisplay">Thành Viên</div>
                 </div>
-                <button onclick="logout()" class="absolute right-3 top-4 text-slate-300 hover:text-red-500 transition"><i class="fa-solid fa-right-from-bracket"></i></button>
+                <button onclick="logout()" class="absolute right-3 top-4 text-slate-300 hover:text-red-500 transition" title="Đăng xuất">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                </button>
             </div>
             <button id="btnLoginMenu" onclick="openLogin()" class="w-full bg-slate-900 hover:bg-slate-800 text-white text-sm font-semibold px-4 py-3 rounded-xl shadow-md transition-all active:scale-95 flex items-center justify-center">
                 <i class="fa-regular fa-user mr-2"></i> Đăng nhập ngay
@@ -47,8 +50,8 @@
 
         <div class="flex-1 overflow-y-auto py-4 px-3">
             <ul class="space-y-1.5">
-                <li><a href="#" onclick="switchTab('studio'); return false;" class="flex items-center px-4 py-3 bg-indigo-50 text-indigo-700 rounded-xl font-semibold transition-all"><i class="fa-solid fa-wand-magic-sparkles w-6"></i> AI Studio</a></li>
-                <li><a href="#" onclick="switchTab('history'); return false;" class="flex items-center px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-medium transition-all"><i class="fa-solid fa-clock-rotate-left w-6"></i> Lịch sử tạo</a></li>
+                <li><a href="#" id="navStudio" onclick="switchTab('studio'); return false;" class="flex items-center px-4 py-3 bg-indigo-50 text-indigo-700 rounded-xl font-semibold transition-all"><i class="fa-solid fa-wand-magic-sparkles w-6"></i> AI Studio</a></li>
+                <li><a href="#" id="navHistory" onclick="switchTab('history'); return false;" class="flex items-center px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-medium transition-all"><i class="fa-solid fa-clock-rotate-left w-6"></i> Lịch sử tạo</a></li>
                 <li class="pt-4 pb-2 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider">Cửa hàng</li>
                 <li>
                     <a href="#" onclick="openPayment(); return false;" class="flex items-center px-4 py-3 text-slate-600 hover:bg-amber-50 hover:text-amber-700 rounded-xl font-medium transition-all relative group">
@@ -79,7 +82,7 @@
                                 <option value="vi-VN-HoaiMyNeural" data-pitch="+0Hz">Nữ (Hoài My) - Tự nhiên</option>
                                 <option value="vi-VN-NamMinhNeural" data-pitch="+0Hz">Nam (Nam Minh) - Trầm ấm</option>
                             </optgroup>
-                            <optgroup label="✨ Tiếng Việt (Hot)">
+                            <optgroup label="✨ Tiếng Việt (Mới)">
                                 <option value="vi-VN-HoaiMyNeural" data-pitch="+15Hz">Nữ (Vy Vy) - Review Phim</option>
                                 <option value="vi-VN-HoaiMyNeural" data-pitch="-15Hz">Nữ (Hạ Mây) - Tâm sự/Kể truyện</option>
                                 <option value="vi-VN-NamMinhNeural" data-pitch="-12Hz">Nam (Hoàng Khang) - Truyện ma</option>
@@ -121,18 +124,15 @@
                             <i class="fa-solid fa-gauge-high mr-2 text-slate-400"></i> <span id="speedLabel">1x Tốc độ</span> <i class="fa-solid fa-chevron-down ml-3 text-[10px]"></i>
                         </button>
                         <div id="speedMenu" class="custom-dropdown absolute hidden bg-white border border-slate-100 premium-shadow rounded-xl mt-2 w-48 z-50 py-2 text-sm font-medium fade-in">
-                           <a href="#" onclick="setSpeed('-75%', '0.25x Chậm'); return false;" class="block px-5 py-2.5 hover:bg-slate-50 text-slate-600 border-l-2 border-transparent hover:border-indigo-200">0.25x Rất chậm</a>
-        <a href="#" onclick="setSpeed('-50%', '0.5x Chậm'); return false;" class="block px-5 py-2.5 hover:bg-slate-50 text-slate-600 border-l-2 border-transparent hover:border-indigo-200">0.5x Chậm</a>
-        <a href="#" onclick="setSpeed('-25%', '0.75x Chậm'); return false;" class="block px-5 py-2.5 hover:bg-slate-50 text-slate-600 border-l-2 border-transparent hover:border-indigo-200">0.75x Hơi chậm</a>
-        <a href="#" onclick="setSpeed('+0%', '1x Thường'); return false;" class="block px-5 py-2.5 bg-indigo-50 text-indigo-700 font-bold border-l-2 border-indigo-600">1x Bình thường</a>
-        <a href="#" onclick="setSpeed('+25%', '1.25x Nhanh'); return false;" class="block px-5 py-2.5 hover:bg-slate-50 text-slate-600 border-l-2 border-transparent hover:border-indigo-200">1.25x Nhanh</a>
-        <a href="#" onclick="setSpeed('+50%', '1.5x Nhanh'); return false;" class="block px-5 py-2.5 hover:bg-slate-50 text-slate-600 border-l-2 border-transparent hover:border-indigo-200">1.5x Rất nhanh</a>
-        <a href="#" onclick="setSpeed('+75%', '1.75x Nhanh'); return false;" class="block px-5 py-2.5 hover:bg-slate-50 text-slate-600 border-l-2 border-transparent hover:border-indigo-200">1.75x Cực nhanh</a>
-        <a href="#" onclick="setSpeed('+100%', '2x Siêu tốc'); return false;" class="block px-5 py-2.5 hover:bg-slate-50 text-slate-600 border-l-2 border-transparent hover:border-indigo-200">2x Siêu tốc</a>
-    </div>
+                            <a href="#" onclick="setSpeed('-75%', '0.25x Chậm'); return false;" class="block px-5 py-2.5 hover:bg-slate-50">0.25x Rất chậm</a>
+                            <a href="#" onclick="setSpeed('-50%', '0.5x Chậm'); return false;" class="block px-5 py-2.5 hover:bg-slate-50">0.5x Chậm</a>
+                            <a href="#" onclick="setSpeed('+0%', '1x Thường'); return false;" class="block px-5 py-2.5 bg-indigo-50 text-indigo-700 font-bold">1x Bình thường</a>
+                            <a href="#" onclick="setSpeed('+50%', '1.5x Nhanh'); return false;" class="block px-5 py-2.5 hover:bg-slate-50">1.5x Nhanh</a>
+                            <a href="#" onclick="setSpeed('+100%', '2x Siêu tốc'); return false;" class="block px-5 py-2.5 hover:bg-slate-50">2x Siêu tốc</a>
+                        </div>
                     </div>
 
-                    <button onclick="document.getElementById('pauseSettingsModal').classList.remove('hidden'); document.getElementById('pauseSettingsModal').classList.add('flex');" class="bg-white border border-slate-200 hover:bg-slate-50 px-4 py-2.5 rounded-xl text-slate-500 hover:text-indigo-600 shadow-sm" title="Thiết lập ngắt nghỉ">
+                    <button onclick="document.getElementById('pauseSettingsModal').classList.remove('hidden'); document.getElementById('pauseSettingsModal').classList.add('flex');" class="bg-white border border-slate-200 hover:bg-slate-50 px-4 py-2.5 rounded-xl text-slate-500 hover:text-indigo-600 shadow-sm">
                         <i class="fa-solid fa-quote-right"></i>
                     </button>
 
@@ -140,23 +140,34 @@
                         <button onclick="toggleDropdown('pauseMenu')" class="flex items-center bg-slate-100 border border-slate-200 hover:bg-slate-200 px-3 py-2.5 rounded-xl transition font-semibold text-slate-700 text-sm">
                             <i class="fa-regular fa-clock mr-2 text-indigo-500"></i> Thêm khoảng nghỉ <i class="fa-solid fa-chevron-down ml-2 text-[10px]"></i>
                         </button>
-                        <div id="pauseMenu" class="custom-dropdown absolute hidden bg-white border border-slate-100 premium-shadow rounded-xl mt-2 w-40 z-50 py-2 text-sm text-center fade-in">
-                            <a href="#" onclick="insertPause('0.5s'); return false;" class="block px-4 py-2.5 hover:bg-slate-50">0.5s</a>
-                            <a href="#" onclick="insertPause('1s'); return false;" class="block px-4 py-2.5 hover:bg-slate-50">1s</a>
-                            <a href="#" onclick="insertPause('2s'); return false;" class="block px-4 py-2.5 hover:bg-slate-50">2s</a>
+                     <div id="speedMenu" class="custom-dropdown absolute hidden bg-white border border-slate-100 premium-shadow rounded-xl mt-2 w-48 z-50 py-2 text-sm font-medium max-h-60 overflow-y-auto fade-in">
+                            <a href="#" onclick="setSpeed('-75%', '0.25x'); return false;" class="block px-5 py-2 hover:bg-slate-50 text-slate-600">0.25x Rất chậm</a>
+                            <a href="#" onclick="setSpeed('-50%', '0.5x'); return false;" class="block px-5 py-2 hover:bg-slate-50 text-slate-600">0.5x Chậm</a>
+                            <a href="#" onclick="setSpeed('-25%', '0.75x'); return false;" class="block px-5 py-2 hover:bg-slate-50 text-slate-600">0.75x Hơi chậm</a>
+                            <a href="#" onclick="setSpeed('+0%', '1x'); return false;" class="block px-5 py-2 bg-indigo-50 text-indigo-700 font-bold border-l-2 border-indigo-600">1x Bình thường</a>
+                            <a href="#" onclick="setSpeed('+15%', '1.15x'); return false;" class="block px-5 py-2 hover:bg-slate-50 text-slate-600">1.15x Hơi nhanh</a>
+                            <a href="#" onclick="setSpeed('+25%', '1.25x'); return false;" class="block px-5 py-2 hover:bg-slate-50 text-slate-600">1.25x Nhanh</a>
+                            <a href="#" onclick="setSpeed('+50%', '1.5x'); return false;" class="block px-5 py-2 hover:bg-slate-50 text-slate-600">1.5x Rất nhanh</a>
+                            <a href="#" onclick="setSpeed('+100%', '2x'); return false;" class="block px-5 py-2 hover:bg-slate-50 text-slate-600">2x Siêu tốc</a>
                         </div>
                     </div>
 
                     <div class="flex-1"></div>
-                    <button class="text-slate-400 hover:text-red-500" onclick="document.getElementById('textInput').value=''; document.getElementById('charCount').innerText='0';"><i class="fa-solid fa-eraser"></i></button>
+                    <button class="text-slate-400 hover:text-red-500" onclick="document.getElementById('textInput').value=''; document.getElementById('charCount').innerText='0'; document.getElementById('resultContainer').classList.add('hidden');"><i class="fa-solid fa-eraser"></i></button>
                 </div>
 
                 <div class="relative h-[350px]">
                     <textarea id="textInput" class="w-full h-full p-8 text-lg text-slate-700 outline-none resize-none leading-relaxed" placeholder="Nhập văn bản tại đây..."></textarea>
                     
                     <div id="loadingContainer" class="hidden absolute inset-0 bg-white/60 backdrop-blur-sm z-20 flex flex-col items-center justify-center">
-                        <i class="fa-solid fa-circle-notch loading-spin text-4xl text-indigo-600 mb-2"></i>
-                        <p class="text-sm font-bold text-indigo-600">Đang xử lý âm thanh...</p>
+                        <div class="bg-white p-6 rounded-2xl premium-shadow border border-slate-100 w-80 text-center">
+                            <i class="fa-solid fa-microchip loading-spin text-3xl text-indigo-500 mb-4"></i>
+                            <h4 class="font-bold text-slate-800 mb-1">AI đang xử lý</h4>
+                            <div class="w-full bg-slate-100 rounded-full h-2 mt-4 overflow-hidden">
+                                <div id="progressBar" class="bg-gradient-to-r from-indigo-500 to-purple-500 h-2 rounded-full progress-transition" style="width: 0%"></div>
+                            </div>
+                            <div id="progressText" class="text-xs font-bold text-indigo-600 mt-2">0%</div>
+                        </div>
                     </div>
 
                     <div id="resultContainer" class="hidden absolute bottom-6 left-8 right-8 bg-slate-900 text-white rounded-2xl p-4 premium-shadow flex items-center gap-4 z-20 border border-slate-700">
@@ -167,31 +178,23 @@
 
                 <div class="bg-slate-50 p-5 border-t border-slate-100 flex items-center justify-between">
                     <div class="text-sm font-medium text-slate-400">Đã nhập: <span id="charCount" class="font-bold text-indigo-600">0</span> ký tự</div>
-                    <button id="btnGenerate" class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold py-3.5 px-10 rounded-xl shadow-lg active:scale-95 transition flex items-center">
+                    <button id="btnGenerate" class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold py-3.5 px-10 rounded-xl shadow-lg transition flex items-center">
                         <i class="fa-solid fa-headphones mr-2"></i> Tạo audio
                     </button>
                 </div>
             </div>
+
+            <div id="historyTab" class="hidden max-w-5xl mx-auto bg-white rounded-2xl floating-shadow border border-slate-100 flex flex-col overflow-hidden h-[500px] fade-in">
+                <div class="bg-slate-50/80 border-b border-slate-100 p-5 flex justify-between items-center">
+                    <h3 class="text-lg font-bold"><i class="fa-solid fa-clock-rotate-left mr-2 text-indigo-500"></i> Lịch sử tạo của bạn</h3>
+                    <button onclick="xoaLichSu()" class="text-xs font-bold text-red-500 bg-red-50 px-3 py-2 rounded-lg hover:bg-red-100 transition"><i class="fa-solid fa-trash mr-1"></i> Xóa sạch</button>
+                </div>
+                <div id="historyList" class="p-6 overflow-y-auto flex-1 space-y-4 bg-slate-50/30"></div>
+            </div>
         </div>
     </div>
 
-    <div id="pauseSettingsModal" class="hidden absolute inset-0 bg-slate-900/60 backdrop-blur-sm justify-center items-center z-50">
-        <div class="bg-white rounded-3xl shadow-2xl w-[500px] overflow-hidden fade-in">
-            <div class="flex justify-between items-center p-6 border-b border-slate-100">
-                <h3 class="text-xl font-bold text-slate-800">Thiết lập ngắt nghỉ</h3>
-                <button onclick="document.getElementById('pauseSettingsModal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-xl"></i></button>
-            </div>
-            <div class="p-8 grid grid-cols-2 gap-x-8 gap-y-6">
-                <div class="flex justify-between items-center"><span class="text-sm font-semibold text-slate-600 flex items-center">Dấu chấm <span class="bg-slate-100 text-slate-500 w-5 h-5 flex items-center justify-center rounded-full ml-2 text-xs font-bold">.</span></span><div class="flex items-center border border-slate-200 rounded-lg overflow-hidden"><button onclick="changePause('dot', -0.05)" class="px-3 py-1.5 hover:bg-slate-50 border-r">-</button><input id="pause_dot" type="text" value="0.45s" class="w-14 text-center text-sm font-semibold outline-none" readonly><button onclick="changePause('dot', 0.05)" class="px-3 py-1.5 hover:bg-slate-50 border-l">+</button></div></div>
-                <div class="flex justify-between items-center"><span class="text-sm font-semibold text-slate-600 flex items-center">Dấu phẩy <span class="bg-slate-100 text-slate-500 w-5 h-5 flex items-center justify-center rounded-full ml-2 text-xs font-bold">,</span></span><div class="flex items-center border border-slate-200 rounded-lg overflow-hidden"><button onclick="changePause('comma', -0.05)" class="px-3 py-1.5 hover:bg-slate-50 border-r">-</button><input id="pause_comma" type="text" value="0.25s" class="w-14 text-center text-sm font-semibold outline-none" readonly><button onclick="changePause('comma', 0.05)" class="px-3 py-1.5 hover:bg-slate-50 border-l">+</button></div></div>
-                <div class="flex justify-between items-center"><span class="text-sm font-semibold text-slate-600 flex items-center">Dấu chấm phẩy <span class="bg-slate-100 text-slate-500 w-5 h-5 flex items-center justify-center rounded-full ml-2 text-xs font-bold">;</span></span><div class="flex items-center border border-slate-200 rounded-lg overflow-hidden"><button onclick="changePause('semicolon', -0.05)" class="px-3 py-1.5 hover:bg-slate-50 border-r">-</button><input id="pause_semicolon" type="text" value="0.3s" class="w-14 text-center text-sm font-semibold outline-none" readonly><button onclick="changePause('semicolon', 0.05)" class="px-3 py-1.5 hover:bg-slate-50 border-l">+</button></div></div>
-                <div class="flex justify-between items-center"><span class="text-sm font-semibold text-slate-600 flex items-center">Xuống dòng <span class="bg-slate-100 text-slate-500 w-5 h-5 flex items-center justify-center rounded-full ml-2 text-xs font-bold"><i class="fa-solid fa-align-left"></i></span></span><div class="flex items-center border border-slate-200 rounded-lg overflow-hidden"><button onclick="changePause('newline', -0.05)" class="px-3 py-1.5 hover:bg-slate-50 border-r">-</button><input id="pause_newline" type="text" value="0.6s" class="w-14 text-center text-sm font-semibold outline-none" readonly><button onclick="changePause('newline', 0.05)" class="px-3 py-1.5 hover:bg-slate-50 border-l">+</button></div></div>
-            </div>
-            <div class="p-6 border-t border-slate-100 flex justify-end"><button onclick="document.getElementById('pauseSettingsModal').classList.add('hidden')" class="px-10 py-3 bg-yellow-400 hover:bg-yellow-500 text-slate-900 rounded-xl text-sm font-bold transition">Đóng</button></div>
-        </div>
-    </div>
-
-    <div id="loginModal" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-sm justify-center items-center z-50">
+    <div id="loginModal" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex justify-center items-center z-50">
         <div class="bg-white rounded-[32px] premium-shadow w-[420px] overflow-hidden border border-slate-100 relative fade-in">
             <button onclick="closeModals()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 bg-slate-50 w-8 h-8 rounded-full flex items-center justify-center transition"><i class="fa-solid fa-xmark"></i></button>
             <div class="p-10">
@@ -200,8 +203,8 @@
                     <p class="text-slate-500 text-sm mt-2" id="authSubtitle">Đăng ký để nhận ngay 1000 ký tự</p>
                 </div>
                 <div class="space-y-4 mb-8">
-                    <input type="email" id="emailInput" placeholder="Địa chỉ Email" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-sm outline-none focus:border-indigo-500 transition">
-                    <input type="password" id="passInput" placeholder="Mật khẩu" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-sm outline-none focus:border-indigo-500 transition">
+                    <input type="email" id="emailInput" placeholder="Địa chỉ Email" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-sm outline-none focus:border-indigo-500 transition shadow-sm">
+                    <input type="password" id="passInput" placeholder="Mật khẩu" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-sm outline-none focus:border-indigo-500 transition shadow-sm">
                 </div>
                 <button onclick="processAuthReal()" id="authSubmitBtn" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold py-4 rounded-2xl shadow-xl transition active:scale-95">Đăng ký & Nhận quà</button>
                 <div class="text-center mt-8 text-sm text-slate-500">
@@ -212,22 +215,38 @@
         </div>
     </div>
 
-    <div id="paymentModal" class="hidden absolute inset-0 bg-slate-900/60 backdrop-blur-sm justify-center items-center z-50">
-        <div class="bg-white rounded-[32px] shadow-2xl w-[420px] overflow-hidden relative fade-in">
-            <div class="bg-gradient-to-r from-blue-600 to-indigo-700 py-10 text-center text-white relative">
+    <div id="pauseSettingsModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex justify-center items-center z-50">
+        <div class="bg-white rounded-3xl shadow-2xl w-[500px] overflow-hidden fade-in">
+            <div class="flex justify-between items-center p-6 border-b border-slate-100">
+                <h3 class="text-xl font-bold text-slate-800">Thiết lập ngắt nghỉ</h3>
+                <button onclick="closeModals()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            <div class="p-8 grid grid-cols-2 gap-x-8 gap-y-6">
+                <div class="flex justify-between items-center"><span class="text-sm font-semibold">Dấu chấm (.)</span><div class="flex border rounded-lg"><button onclick="changePause('dot',-0.05)" class="px-2 py-1">-</button><input id="pause_dot" value="0.45s" class="w-12 text-center text-sm" readonly><button onclick="changePause('dot',0.05)" class="px-2 py-1">+</button></div></div>
+                <div class="flex justify-between items-center"><span class="text-sm font-semibold">Dấu phẩy (,)</span><div class="flex border rounded-lg"><button onclick="changePause('comma',-0.05)" class="px-2 py-1">-</button><input id="pause_comma" value="0.25s" class="w-12 text-center text-sm" readonly><button onclick="changePause('comma',0.05)" class="px-2 py-1">+</button></div></div>
+                <div class="flex justify-between items-center"><span class="text-sm font-semibold">Chấm phẩy (;)</span><div class="flex border rounded-lg"><button onclick="changePause('semicolon',-0.05)" class="px-2 py-1">-</button><input id="pause_semicolon" value="0.30s" class="w-12 text-center text-sm" readonly><button onclick="changePause('semicolon',0.05)" class="px-2 py-1">+</button></div></div>
+                <div class="flex justify-between items-center"><span class="text-sm font-semibold">Xuống dòng</span><div class="flex border rounded-lg"><button onclick="changePause('newline',-0.05)" class="px-2 py-1">-</button><input id="pause_newline" value="0.60s" class="w-12 text-center text-sm" readonly><button onclick="changePause('newline',0.05)" class="px-2 py-1">+</button></div></div>
+            </div>
+            <div class="p-6 border-t bg-slate-50 flex justify-end"><button onclick="closeModals()" class="px-8 py-2 bg-yellow-400 text-slate-900 rounded-xl font-bold">Đóng</button></div>
+        </div>
+    </div>
+
+    <div id="paymentModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex justify-center items-center z-50">
+        <div class="bg-white rounded-[32px] shadow-2xl w-[400px] overflow-hidden relative fade-in text-center">
+            <div class="bg-gradient-to-r from-blue-600 to-indigo-700 py-10 text-white">
                 <button onclick="closeModals()" class="absolute top-4 right-4 text-white/50 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
                 <div class="w-16 h-16 bg-white/20 rounded-2xl mb-4 mx-auto flex items-center justify-center"><i class="fa-solid fa-crown text-3xl text-amber-300"></i></div>
                 <h3 class="text-2xl font-black uppercase tracking-wide">Nâng Cấp VIP</h3>
                 <p class="text-blue-100 text-sm opacity-80">Sở hữu giọng đọc không giới hạn</p>
             </div>
-            <div class="p-8 text-center">
+            <div class="p-8">
                 <div class="mb-6 bg-slate-50 p-4 rounded-3xl inline-block border-2 border-dashed border-indigo-100">
-                    <img id="qrImg" src="https://img.vietqr.io/image/vietinbank-107873799807-compact.jpg?amount=50000&addTag=1&accountName=NGUYEN%20QUOC%20BAO" class="w-44 h-44 rounded-xl">
+                    <img src="https://img.vietqr.io/image/vietinbank-107873799807-compact.jpg?amount=50000&addTag=1&accountName=NGUYEN%20QUOC%20BAO" class="w-44 h-44 rounded-xl">
                 </div>
                 <div class="text-left space-y-2 mb-6 bg-indigo-50 p-4 rounded-2xl text-sm font-bold">
-                    <div class="flex justify-between"><span>STK:</span> <span class="text-indigo-700">107873799807</span></div>
-                    <div class="flex justify-between"><span>Chủ TK:</span> <span class="text-indigo-700">NGUYEN QUOC BAO</span></div>
-                    <div class="pt-2 border-t border-indigo-100"><p id="transferMemo" class="text-slate-800">2Z STUDIO [EMAIL]</p></div>
+                    <div class="flex justify-between text-xs font-bold text-slate-400 uppercase"><span>Ngân hàng:</span> <span class="text-indigo-700 font-black">VietinBank</span></div>
+                    <div class="flex justify-between text-xs font-bold text-slate-400 uppercase"><span>Số TK:</span> <span class="text-indigo-700 font-black">107873799807</span></div>
+                    <div class="pt-2 border-t border-indigo-100"><p id="transferMemo" class="text-slate-800 font-black tracking-wide uppercase">2Z STUDIO [EMAIL]</p></div>
                 </div>
                 <button onclick="closeModals()" class="w-full bg-slate-900 text-white font-bold py-4 rounded-2xl shadow-xl transition active:scale-95">Tôi đã chuyển khoản xong</button>
             </div>
@@ -235,53 +254,77 @@
     </div>
 
     <script>
-        let currentUserEmail = localStorage.getItem('userEmail');
+        let userEmail = localStorage.getItem('userEmail');
         let charBalance = parseInt(localStorage.getItem('userBalance')) || 0;
         let isVIP = localStorage.getItem('userVIP') === 'true';
-        let isLoggedIn = !!currentUserEmail;
         let isRegisterMode = true;
 
         function toggleDropdown(id) {
             document.querySelectorAll('.custom-dropdown').forEach(el => { if (el.id !== id) el.classList.add('hidden'); });
             document.getElementById(id).classList.toggle('hidden');
         }
-        document.addEventListener('click', e => { if (!e.target.closest('.dropdown-container')) document.querySelectorAll('.custom-dropdown').forEach(el => el.classList.add('hidden')); });
 
         function updateUI() {
-            if (isLoggedIn) {
+            if (userEmail) {
                 document.getElementById('btnLoginMenu').classList.add('hidden');
                 document.getElementById('userInfo').classList.replace('hidden', 'flex');
-                document.getElementById('userNameDisplay').innerText = currentUserEmail.split('@')[0];
+                document.getElementById('userNameDisplay').innerText = userEmail.split('@')[0];
                 document.getElementById('balanceDisplay').innerText = isVIP ? '∞' : charBalance.toLocaleString();
-                document.getElementById('transferMemo').innerText = `2Z STUDIO ${currentUserEmail}`;
+                document.getElementById('transferMemo').innerText = `2Z STUDIO ${userEmail.toUpperCase()}`;
             }
         }
         updateUI();
 
-        // --- AUTH LOGIC (BẢN ĐẦY ĐỦ) ---
+        function switchTab(tab) {
+            document.getElementById('studioTab').classList.toggle('hidden', tab !== 'studio');
+            document.getElementById('historyTab').classList.toggle('hidden', tab !== 'history');
+            document.getElementById('navStudio').className = tab === 'studio' ? "flex items-center px-4 py-3 bg-indigo-50 text-indigo-700 rounded-xl font-semibold transition-all" : "flex items-center px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-medium transition-all";
+            document.getElementById('navHistory').className = tab === 'history' ? "flex items-center px-4 py-3 bg-indigo-50 text-indigo-700 rounded-xl font-semibold transition-all" : "flex items-center px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-medium transition-all";
+            if(tab === 'history') hienThiLichSu();
+        }
+
+        // --- LỊCH SỬ ---
+        function luuVaoLichSu(text, audioUrl) {
+            let userKey = 'history_2z_' + userEmail;
+            let history = JSON.parse(localStorage.getItem(userKey)) || [];
+            history.unshift({ time: new Date().toLocaleString('vi-VN'), text: text.substring(0, 80) + '...', url: audioUrl });
+            if(history.length > 15) history.pop();
+            localStorage.setItem(userKey, JSON.stringify(history));
+        }
+
+        function hienThiLichSu() {
+            const list = document.getElementById('historyList');
+            let userKey = 'history_2z_' + userEmail;
+            const history = JSON.parse(localStorage.getItem(userKey)) || [];
+            if(history.length === 0) { list.innerHTML = "<p class='text-center text-slate-400 py-16'>Chưa có file âm thanh nào được tạo.</p>"; return; }
+            list.innerHTML = history.map(item => `
+                <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                    <div class="text-[10px] font-bold text-slate-400 mb-2 uppercase tracking-wider">${item.time}</div>
+                    <div class="text-sm text-slate-700 mb-4 italic">"${item.text}"</div>
+                    <audio src="${item.url}" controls class="w-full h-8"></audio>
+                </div>
+            `).join('');
+        }
+        function xoaLichSu() { localStorage.removeItem('history_2z_' + userEmail); hienThiLichSu(); }
+
+        // --- AUTH ---
+        function openLogin() { document.getElementById('loginModal').classList.remove('hidden'); }
+        function openPayment() { if(!userEmail) return openLogin(); document.getElementById('paymentModal').classList.remove('hidden'); }
+        function closeModals() { document.querySelectorAll('#loginModal, #paymentModal, #pauseSettingsModal').forEach(m => m.classList.add('hidden')); }
+
         function toggleAuthMode() {
             isRegisterMode = !isRegisterMode;
-            if(isRegisterMode) {
-                document.getElementById('authTitle').innerText = "Tạo tài khoản mới";
-                document.getElementById('authSubtitle').innerText = "Đăng ký để nhận ngay 1000 ký tự";
-                document.getElementById('authSubmitBtn').innerText = "Đăng ký & Nhận quà";
-                document.getElementById('authToggleText').innerText = "Đã có tài khoản?";
-                document.getElementById('authToggleBtn').innerText = "Đăng nhập ngay";
-            } else {
-                document.getElementById('authTitle').innerText = "Chào mừng trở lại";
-                document.getElementById('authSubtitle').innerText = "Đăng nhập để tiếp tục làm việc";
-                document.getElementById('authSubmitBtn').innerText = "Đăng nhập ngay";
-                document.getElementById('authToggleText').innerText = "Chưa có tài khoản?";
-                document.getElementById('authToggleBtn').innerText = "Đăng ký ngay";
-            }
+            document.getElementById('authTitle').innerText = isRegisterMode ? "Tạo tài khoản mới" : "Chào mừng trở lại";
+            document.getElementById('authSubtitle').innerText = isRegisterMode ? "Đăng ký để nhận ngay 1000 ký tự" : "Đăng nhập để tiếp tục làm việc";
+            document.getElementById('authSubmitBtn').innerText = isRegisterMode ? "Đăng ký & Nhận quà" : "Đăng nhập ngay";
+            document.getElementById('authToggleBtn').innerText = isRegisterMode ? "Đăng nhập ngay" : "Đăng ký ngay";
         }
 
         async function processAuthReal() {
             const email = document.getElementById('emailInput').value.trim();
             const pass = document.getElementById('passInput').value.trim();
-            if(!email || !pass) return alert("Vui lòng nhập đầy đủ!");
+            if(!email || !pass) return alert("Vui lòng điền đủ thông tin!");
             const endpoint = isRegisterMode ? '/api/register' : '/api/login';
-            document.getElementById('authSubmitBtn').innerText = "Đang xử lý...";
             try {
                 const res = await fetch(endpoint, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({email, password: pass}) });
                 const data = await res.json();
@@ -290,66 +333,56 @@
                     location.reload();
                 } else { alert(data.detail); }
             } catch(e) { alert("Lỗi kết nối máy chủ!"); }
-            finally { document.getElementById('authSubmitBtn').innerText = isRegisterMode ? "Đăng ký & Nhận quà" : "Đăng nhập ngay"; }
         }
 
-        // --- PAUSE LOGIC ---
-        let pauseTimes = { dot: 0.45, comma: 0.25, semicolon: 0.3, newline: 0.6 };
-        function changePause(type, val) {
-            pauseTimes[type] = Math.max(0.1, Math.min(2.0, pauseTimes[type] + val));
-            document.getElementById(`pause_${type}`).value = pauseTimes[type].toFixed(2) + 's';
-        }
-        function insertPause(time) {
-            const area = document.getElementById('textInput');
-            const start = area.selectionStart;
-            area.value = area.value.substring(0, start) + `[Nghỉ ${time}]` + area.value.substring(area.selectionEnd);
-            toggleDropdown('pauseMenu'); area.focus();
-        }
-
-        function openLogin() { document.getElementById('loginModal').classList.replace('hidden', 'flex'); }
-        function openPayment() { if(!isLoggedIn) return openLogin(); document.getElementById('paymentModal').classList.replace('hidden', 'flex'); }
-        function closeModals() { document.querySelectorAll('#loginModal, #paymentModal, #pauseSettingsModal').forEach(m => m.classList.add('hidden')); }
-
-        function setSpeed(rate, label) {
-            document.getElementById('speedBtn').setAttribute('data-rate', rate);
-            document.getElementById('speedLabel').innerText = label;
-            toggleDropdown('speedMenu');
-        }
-
-        document.getElementById('textInput').addEventListener('input', e => { document.getElementById('charCount').innerText = e.target.value.length; });
+        // --- TTS ---
+        let pTimes = { dot: 0.45, comma: 0.25, semicolon: 0.3, newline: 0.6 };
+        function changePause(t, v) { pTimes[t] = Math.max(0.1, pTimes[t] + v); document.getElementById(`pause_${t}`).value = pTimes[t].toFixed(2) + 's'; }
 
         document.getElementById('btnGenerate').addEventListener('click', async () => {
-            if(!isLoggedIn) return openLogin();
+            if(!userEmail) return openLogin();
             const text = document.getElementById('textInput').value.trim();
-            if(!text) return alert("Nhập văn bản!");
+            if(!text) return alert("Vui lòng nhập văn bản!");
             if(!isVIP && text.length > charBalance) return openPayment();
 
-            document.getElementById('loadingContainer').classList.remove('hidden');
+            const loading = document.getElementById('loadingContainer');
+            const progress = document.getElementById('progressBar');
+            const progressT = document.getElementById('progressText');
+            
+            loading.classList.remove('hidden');
+            let p = 0;
+            const timer = setInterval(() => { if(p < 95) { p += (100 - p) / 10; progress.style.width = p + '%'; progressT.innerText = Math.floor(p) + '%'; } }, 200);
+
             const voice = document.getElementById('voiceSelect');
             const pitch = voice.options[voice.selectedIndex].getAttribute('data-pitch') || "+0Hz";
 
-            let processed = text
-                .replace(/\./g, " . ".repeat(Math.round(pauseTimes.dot * 4)))
-                .replace(/,/g, " , ".repeat(Math.round(pauseTimes.comma * 4)))
-                .replace(/\[Nghỉ (.*?)s\]/g, " ... ");
+            let processed = text.replace(/\./g, " . ".repeat(Math.round(pTimes.dot * 4))).replace(/,/g, " , ".repeat(Math.round(pTimes.comma * 4)));
 
-            const res = await fetch('/api/tts', {
-                method: 'POST', headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ text: processed, voice: voice.value, rate: document.getElementById('speedBtn').getAttribute('data-rate'), pitch: pitch, email: currentUserEmail })
-            });
+            try {
+                const res = await fetch('/api/tts', {
+                    method: 'POST', headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ text: processed, voice: voice.value, rate: document.getElementById('speedBtn').getAttribute('data-rate'), pitch: pitch, email: userEmail })
+                });
 
-            if(res.ok) {
-                const blob = await res.blob();
-                document.getElementById('audioPlayer').src = URL.createObjectURL(blob);
-                document.getElementById('resultContainer').classList.remove('hidden');
-                if(!isVIP) { charBalance -= text.length; localStorage.setItem('userBalance', charBalance); updateUI(); }
-                document.getElementById('audioPlayer').play();
-            }
-            document.getElementById('loadingContainer').classList.add('hidden');
+                clearInterval(timer);
+                if(res.ok) {
+                    progress.style.width = '100%'; progressT.innerText = '100%';
+                    const blob = await res.blob();
+                    const url = URL.createObjectURL(blob);
+                    document.getElementById('audioPlayer').src = url;
+                    document.getElementById('btnDownload').href = url;
+                    document.getElementById('resultContainer').classList.remove('hidden');
+                    luuVaoLichSu(text, url);
+                    if(!isVIP) { charBalance -= text.length; localStorage.setItem('userBalance', charBalance); updateUI(); }
+                    setTimeout(() => { loading.classList.add('hidden'); document.getElementById('audioPlayer').play(); }, 500);
+                } else { loading.classList.add('hidden'); alert("Lỗi xử lý!"); }
+            } catch(e) { clearInterval(timer); loading.classList.add('hidden'); alert("Lỗi kết nối!"); }
         });
 
+        function setSpeed(rate, label) { document.getElementById('speedBtn').setAttribute('data-rate', rate); document.getElementById('speedLabel').innerText = label; toggleDropdown('speedMenu'); }
+        function insertPause(t) { const a = document.getElementById('textInput'); const s = a.selectionStart; a.value = a.value.substring(0, s) + `[Nghỉ ${t}]` + a.value.substring(a.selectionEnd); a.focus(); }
+        document.getElementById('textInput').addEventListener('input', e => { document.getElementById('charCount').innerText = e.target.value.length; });
         function logout() { localStorage.clear(); location.reload(); }
-        function switchTab(tab) { location.reload(); } // Cần backend xử lý lịch sử thật
     </script>
 </body>
 </html>
