@@ -265,16 +265,13 @@
                     <span class="text-sm font-semibold text-slate-500">Xuống dòng</span>
                     <div class="flex items-center border rounded-lg bg-slate-50">
                         <button onclick="changePause('newline',-0.05)" class="px-3 py-1 font-bold">-</button>
-                        <input id="pause_newline" value="0.60s" class="w-14 text-center bg-transparent text-sm font-bold" readonly>
-                        <button onclick="changePause('newline',0.05)" class="px-3 py-1 font-bold">+</button>
-                    </div>
-                </div>
-            </div>
-            <div class="p-4 bg-slate-50 text-right">
-                <button onclick="closeModals()" class="bg-indigo-600 text-white px-6 py-2 rounded-xl text-sm font-bold">Lưu lại</button>
-            </div>
-        </div>
-    </div>
+                      function insertComma() {
+    const a = document.getElementById('textInput');
+    const s = a.selectionStart;
+    a.value = a.value.substring(0, s) + "," + a.value.substring(a.selectionEnd);
+    a.focus();
+    toggleDropdown('pauseMenu');
+}
 
     <script>
         let userEmail = localStorage.getItem('userEmail');
