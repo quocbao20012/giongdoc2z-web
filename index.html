@@ -406,7 +406,55 @@
         function toggleAuthMode() { isRegisterMode = !isRegisterMode; document.getElementById('authTitle').innerText = isRegisterMode ? "Tạo tài khoản" : "Đăng nhập"; }
         function setSpeed(r, l) { document.getElementById('speedBtn').setAttribute('data-rate', r); document.getElementById('speedLabel').innerText = l; toggleDropdown('speedMenu'); }
         function logout() { localStorage.clear(); location.reload(); }
-        document.getElementById('textInput').addEventListener('input', e => { document.getElementById('charCount').innerText = e.target.value.length; });
+        document.getElementById('textInput').addEventListener('input', e => { document.getElementById('charCount').innerText = e.target.value.length; });function changePause(t, v) { 
+    pTimes[t] = Math.max(0.1, pTimes[t] + v); 
+    document.getElementById(`pause_${t}`).value = pTimes[t].toFixed(2) + 's'; 
+}
+
+function closeModals() { 
+    document.querySelectorAll('#loginModal, #paymentModal, #pauseSettingsModal').forEach(m => {
+        m.classList.add('hidden');
+        m.classList.remove('flex');
+    }); 
+}
+        
     </script>
+        <div id="pauseSettingsModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex justify-center items-center z-[100] p-4">
+    <div class="bg-white rounded-3xl w-full max-w-[400px] overflow-hidden shadow-2xl fade-in">
+        <div class="p-6 border-b flex justify-between items-center">
+            <h3 class="font-bold text-slate-800 italic">Thiết lập ngắt nghỉ</h3>
+            <button onclick="closeModals()" class="text-slate-400"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="p-6 space-y-4">
+            <div class="flex items-center justify-between">
+                <span class="text-sm font-semibold text-slate-500">Dấu chấm (.) nghỉ</span>
+                <div class="flex items-center border rounded-lg bg-slate-50">
+                    <button onclick="changePause('dot',-0.05)" class="px-3 py-1 font-bold">-</button>
+                    <input id="pause_dot" value="0.45s" class="w-14 text-center bg-transparent text-sm font-bold" readonly>
+                    <button onclick="changePause('dot',0.05)" class="px-3 py-1 font-bold">+</button>
+                </div>
+            </div>
+            <div class="flex items-center justify-between">
+                <span class="text-sm font-semibold text-slate-500">Dấu phẩy (,) nghỉ</span>
+                <div class="flex items-center border rounded-lg bg-slate-50">
+                    <button onclick="changePause('comma',-0.05)" class="px-3 py-1 font-bold">-</button>
+                    <input id="pause_comma" value="0.25s" class="w-14 text-center bg-transparent text-sm font-bold" readonly>
+                    <button onclick="changePause('comma',0.05)" class="px-3 py-1 font-bold">+</button>
+                </div>
+            </div>
+            <div class="flex items-center justify-between border-t pt-4">
+                <span class="text-sm font-semibold text-slate-500">Xuống dòng nghỉ</span>
+                <div class="flex items-center border rounded-lg bg-slate-50">
+                    <button onclick="changePause('newline',-0.05)" class="px-3 py-1 font-bold">-</button>
+                    <input id="pause_newline" value="0.60s" class="w-14 text-center bg-transparent text-sm font-bold" readonly>
+                    <button onclick="changePause('newline',0.05)" class="px-3 py-1 font-bold">+</button>
+                </div>
+            </div>
+        </div>
+        <div class="p-4 bg-slate-50 text-right">
+            <button onclick="closeModals()" class="bg-indigo-600 text-white px-8 py-2.5 rounded-xl text-sm font-bold shadow-lg shadow-indigo-100 active:scale-95 transition">Xong</button>
+        </div>
+    </div>
+</div>
 </body>
 </html>
